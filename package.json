@@ -1,0 +1,28 @@
+{
+  "name": "8bit-bootcamp",
+  "version": "1.0.0",
+  "description": "An isometric 8-bit game following a U.S. Marine recruit through 13 weeks of military training",
+  "main": "src/main.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "serve": "vite preview --port 3000"
+  },
+  "keywords": [
+    "game",
+    "phaser",
+    "isometric",
+    "8-bit",
+    "military",
+    "training"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "vite": "^5.4.19"
+  },
+  "dependencies": {
+    "phaser": "^3.90.0"
+  }
+}

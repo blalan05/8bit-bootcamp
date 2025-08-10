@@ -1,0 +1,49 @@
+{
+  "version": 1,
+  "pipeline": "3d_to_sprite",
+  "requirements": {
+    "camera": {
+      "projection": "orthographic",
+      "rotation": { "x_deg": 60, "y_deg": 0, "z_deg": 45 },
+      "transparent_background": true,
+      "resolution": { "width": 256, "height": 256 }
+    },
+    "render": {
+      "engine": "workbench_or_eevee",
+      "color": "RGBA",
+      "file_format": "PNG",
+      "alpha": true
+    },
+    "directions": ["n", "ne", "e", "se", "s", "sw", "w", "nw"],
+    "actions": {
+      "idle": { "frames": 12, "fps": 12 },
+      "walk": { "frames": 12, "fps": 12 }
+    },
+    "naming": "<action>_<dir>_<frame>.png",
+    "frame_number": { "pad": 2, "start": 1 },
+    "output": {
+      "renders_dir": "renders/<assetName>/",
+      "packed_atlas": {
+        "image": "public/assets/<assetName>.png",
+        "json": "public/assets/<assetName>.json"
+      }
+    },
+    "packer": {
+      "script": "scripts/packer.py",
+      "args": [
+        "--src", "renders/<assetName>",
+        "--out", "public/assets",
+        "--cols", "12",
+        "--tile", "256",
+        "--downscale", "2"
+      ]
+    }
+  },
+  "acceptance": {
+    "files": [".blend", ".png"],
+    "naming": true,
+    "alpha_channel": true,
+    "sheet_loads_in_game": true
+  },
+  "notes": "Keep low-poly, stylized; avoid high-frequency textures; ensure feet alignment across frames to prevent jitter."
+}
