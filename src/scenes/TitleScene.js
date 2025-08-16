@@ -46,7 +46,7 @@ export default class TitleScene extends Phaser.Scene {
       fill: isSelected ? '#ffffff' : '#9aa4b2',
       fontFamily: 'Courier New, monospace'
     }).setOrigin(0.5).setInteractive({ useHandCursor: true });
-    text.on('pointerdown', () => { this.selectedSlot = i + 1; this.refreshSlots(); });
+    text.on('pointerdown', () => { this.selectedSlot = i + 1; this.refreshSlots(); this.createMenu(); });
     return text;
   }
 
@@ -60,6 +60,7 @@ export default class TitleScene extends Phaser.Scene {
   changeSlot(delta) {
     this.selectedSlot = ((this.selectedSlot - 1 + delta + 3) % 3) + 1;
     this.refreshSlots();
+    this.createMenu();
   }
 
   createMenu() {
@@ -91,9 +92,6 @@ export default class TitleScene extends Phaser.Scene {
       this.input.keyboard.once('keydown-SPACE', () => this.newGame());
       this.input.once('pointerdown', () => this.newGame());
     }
-
-    // Re-render menu when slot changes
-    this.events.on('updateMenu', () => this.createMenu());
   }
 
   createSaveIndicator() {
@@ -104,8 +102,8 @@ export default class TitleScene extends Phaser.Scene {
       indicator.alpha = 1;
       this.tweens.add({ targets: indicator, alpha: 0, delay: 800, duration: 300 });
     };
-    this.onSaved = (e) => { if (e?.detail?.slot === this.selectedSlot) show('Saved'); };
-    this.onCleared = (e) => { if (e?.detail?.slot === this.selectedSlot) show('Save cleared'); };
+    this.onSaved = (e) => { if (!e?.detail || e.detail.slot === this.selectedSlot) show('Saved'); };
+    this.onCleared = (e) => { if (!e?.detail || e.detail.slot === this.selectedSlot) show('Save cleared'); };
     window.addEventListener('game:saved', this.onSaved);
     window.addEventListener('game:saveCleared', this.onCleared);
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
@@ -150,10 +148,5 @@ export default class TitleScene extends Phaser.Scene {
     const no = this.add.text(panel.x + 60, panel.y + 30, 'No', { fontSize: '16px', fill: '#ffffff', fontFamily: 'Courier New, monospace' }).setOrigin(0.5).setInteractive({ useHandCursor: true });
     yes.on('pointerdown', () => { panel.destroy(); yes.destroy(); no.destroy(); onYes?.(); });
     no.on('pointerdown', () => { panel.destroy(); yes.destroy(); no.destroy(); });
-  }
-
-  update() {
-    // Update menu when slot selection changes
-    this.events.emit('updateMenu');
   }
 }
